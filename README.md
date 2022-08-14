@@ -2,6 +2,8 @@
 
 A sourcemap parser in crystal, using vlq encoding.
 
+This repo use changed code from the repo [ConradIrwin/ruby-source_map](https://github.com/ConradIrwin/ruby-source_map). Thanks Conrad Irwin!
+
 ## Installation
 
 1. Add the dependency to your `shard.yml`:
@@ -45,7 +47,7 @@ It will return an array of Sourcemap::Mapping. Those mappings can be used to get
 
 ## Development
 
-TODO: Write development instructions here
+clone the repo and see the code and test the specs. the specs can be run with `crystal spec`
 
 ## Contributing
 
