@@ -103,6 +103,18 @@ module SourceMap
       end
     end
 
+    # Retrieve a mapping for a specific line in the generated code and with source_path
+    def mapping_with_source_path_for(generated_line : Int32, source_path : String) : Mapping?
+      parsed_mappings.find do |mapping|
+        next if mapping.source_path.blank?
+        mapping.generated_line == generated_line && mapping.generated_column == generated_column
+      end
+    end
+
+    def mapping_with_less_column_for(generated_line : Int32, generated_column : Int32) : Mapping?
+      mapping_with_source_path_for(generated_line, (generated_column || 2) - 1)
+    end
+
     # Retrieve all mappings for a specific source path
     def mappings_for_source(source_path : String) : Array(Mapping)
       parsed_mappings.select { |mapping| mapping.source_path == source_path }

@@ -57,5 +57,13 @@ module SourceMap
     def source_code_splitted : Array(String)
       @split_content ||= (@source_content || "").split("\n")
     end
+
+    # Returns true if the mapping is part of the app code
+    # so not from node_modules
+    def is_part_of_app? : Bool
+      return false if source_path.nil?
+      return false if source_path.start_with?("node_modules")
+      true
+    end
   end
 end
