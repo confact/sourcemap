@@ -111,8 +111,8 @@ module SourceMap
       end
     end
 
-    def mapping_with_less_column_for(generated_line : Int32, generated_column : Int32) : Mapping?
-      mapping_with_source_path_for(generated_line, (generated_column || 2) - 1)
+    def mapping_with_less_column_for(generated_line : Int32, generated_column : Int32, start_column : Int32 = 1) : Mapping?
+      mapping_with_source_path_for(generated_line, (generated_column || start_column) - 1)
     end
 
     # Retrieve all mappings for a specific source path
