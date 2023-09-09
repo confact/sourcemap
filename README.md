@@ -45,13 +45,30 @@ sourcemap.parsed_mappings
 It will return an array of Sourcemap::Mapping. Those mappings can be used to get the original source code and the original line and column.
 
 
+Retrive all mappings for a line and column:
+
+```crystal
+sourcemap = Sourcemap::Parser.from_file("sourcemap.js.map")
+
+mapping = sourcemap.mapping_for(1, 1)
+```
+
+Get mappings for specific source file:
+
+```crystal
+sourcemap = Sourcemap::Parser.from_file("sourcemap.js.map")
+
+sourcemap.mappings_for_source("sourcemap.js")
+```
+
+
 ## Development
 
 clone the repo and see the code and test the specs. the specs can be run with `crystal spec`
 
 ## Contributing
 
-1. Fork it (<https://github.com/your-github-user/sourcemap_parser/fork>)
+1. Fork it (<https://github.com/confact/sourcemap/fork>)
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
@@ -59,4 +76,4 @@ clone the repo and see the code and test the specs. the specs can be run with `c
 
 ## Contributors
 
-- [Håkan](https://github.com/your-github-user) - creator and maintainer
+- [Håkan](https://github.com/confact) - creator and maintainer

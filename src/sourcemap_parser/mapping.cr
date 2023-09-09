@@ -8,64 +8,62 @@ module SourceMap
     getter source_path : String?
     property source_content : String?
 
-    def initialize(generated_line, generated_column, source_path, source_line, source_column, name)
-      @generated_line = generated_line
-      @generated_column = generated_column
-      @source_line = source_line
-      @source_column = source_column
-      @name = name
-      @source_path = source_path
+    # Using default values to reduce the number of initializers
+    def initialize(
+      @generated_line : Int32, 
+      @generated_column : Int32,
+      @source_path : String? = nil,
+      @source_line : Int32 = 0,
+      @source_column : Int32 = 0,
+      @name : String? = nil
+    )
     end
 
-    def initialize(generated_line, generated_column, source_path, source_line, source_column)
-      @generated_line = generated_line
-      @generated_column = generated_column
-      @source_line = source_line
-      @source_column = source_column
-      @source_path = source_path
-    end
-
-    def initialize(generated_line, generated_column)
-      @generated_line = generated_line
-      @generated_column = generated_column
+    def source_line_content : String?
+      return nil if source_path.nil?
+      return nil if source_content.nil?
+      source_code_splitted[source_line - 1]?
     end
 
     def pre_context(context_line_no : Int32)
-      return nil if @source_content.nil?
-      start_no = context_line_no - 4
-      start_no = 0 if start_no < 0
-      end_no = context_line_no - 1
-      end_no = source_code_length - 1 if end_no > source_code_length - 1
+      content = source_code_splitted
+      return nil if content.empty?
+      start_no = [0, context_line_no - 4].max
+      end_no = [content.size - 1, context_line_no - 1].min
       source_code(start_no, end_no)
     end
 
     def post_context(context_line_no : Int32)
-      return nil if source_code_splitted.empty?
-      start_no = context_line_no + 1
-      start_no = 0 if start_no < 0
-      end_no = context_line_no + 4
-      end_no = source_code_length - 1 if end_no > source_code_length - 1
+      content = source_code_splitted
+      return nil if content.empty?
+      start_no = [0, context_line_no + 1].max
+      end_no = [content.size - 1, context_line_no + 4].min
       source_code(start_no, end_no)
     end
 
     def context_line(context_line_no : Int32) : String?
       return nil if source_code_splitted.empty?
-      source_code_splitted[context_line_no]
+      source_code_splitted[context_line_no]?
     end
 
     def source_code(from : Int32, to : Int32)
-      return nil if source_code_splitted.empty?
       source_code_splitted[from..to]
     end
 
-    def source_code_length
-      return 0 if @source_content.nil?
+    def source_code_length : Int32
       source_code_splitted.size
     end
 
     def source_code_splitted : Array(String)
-      return [] of String if @source_content.nil?
-      @source_content.not_nil!.split("\n")
+      @split_content ||= (@source_content || "").split("\n")
+    end
+
+    # Returns true if the mapping is part of the app code
+    # so not from node_modules
+    def is_part_of_app? : Bool
+      return false if source_path.nil?
+      return false if source_path.start_with?("node_modules")
+      true
     end
   end
 end
