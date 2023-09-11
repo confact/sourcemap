@@ -104,7 +104,7 @@ module SourceMap
     end
 
     # Retrieve a mapping for a specific line in the generated code and with source_path
-    def mapping_with_source_path_for(generated_line : Int32, source_path : String) : Mapping?
+    def mapping_with_source_path_for(generated_line : Int32, generated_column : Int32) : Mapping?
       parsed_mappings.find do |mapping|
         next if mapping.source_path.blank?
         mapping.generated_line == generated_line && mapping.generated_column == generated_column
